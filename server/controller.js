@@ -1,4 +1,4 @@
-var models = require('../model/model.js');
+var models = require('./db.js');
 var path = require('path');
 var bodyParser = require('body-parser');
 
@@ -34,7 +34,7 @@ module.exports = function (app,io){
                 models.user.create(user,function(err,doc){
                     if(err) res.json(err);
                     else{
-                        res.send("success");
+                        res.sendFile(path.resolve(__dirname+"/../views/test.html"));
                     }
                 });
             }else{
@@ -64,7 +64,6 @@ module.exports = function (app,io){
             }
             else{
                 console.log("Asas"+__dirname);
-//                res.sendFile(path.resolve(__dirname+"/../views/chat1.html"));
                 res.send("success");
             }
             
@@ -74,13 +73,13 @@ module.exports = function (app,io){
     io.on('connection',function(socket){
         console.log("Connection :User is connected  "+handle);
         console.log("Connection : " +socket.id);
+        
         io.to(socket.id).emit('handle', handle);
         users[handle]=socket.id;
         keys[socket.id]=handle;
+        
         console.log("Users list : "+users);
         console.log("keys list : "+keys);
-        
-        
         
         socket.on('group message',function(msg){
             console.log(msg);
